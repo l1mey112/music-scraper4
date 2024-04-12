@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<script src="index.js"></script>
+</head>
+<body hx-ext="ws, remove-me" ws-connect="/api/ws">
+	<style>
+		body {
+			background-color: #1d1e1e;
+			width: 60rem;
+			height: 100vh;
+			word-wrap: break-word;
+			margin: 0 auto;
+			overflow: hidden;
+			display: flex;
+		}
+		@font-face {
+			font-family: 'Terminus (TTF)';
+			src: url('TerminusTTF.woff2') format('woff2');
+		}
+		html, pre {
+			font-family: 'Terminus (TTF)';
+			font-size: 16px;
+		}
+		p, pre, summary {
+			margin: 1px;
+			color: white;
+			font-weight: bold;
+		}
+		.splitter {
+			width: 1px;
+			background-color: #2d2e2e;
+		}
+		#left {
+			flex: 1;
+			padding: 1em;
+		}
+		#right {
+			flex: 1;
+			padding: 1em;
+			overflow-y: auto;
+		}
+		.box {
+			background-color: #2d2e2e;
+			padding: 5px;
+			margin-bottom: 1em;
+		}
+		/* .log {} */
+		.warn {
+			background-color: #ae6a11;
+		}
+		.error {
+			background-color: #941e1e;
+		}
+		.prog {
+			height: 2px;
+			background: linear-gradient(to right, #d32f2f, #f57c00, #ffeb3b, #4caf50);
+			background-size: 400% 400%;
+			animation: progress-animation 5s ease infinite;
+		}
+		.tooltip {
+			border-bottom: 1px dotted black;
+			cursor: pointer;
+		}
+		.table-running {
+			background-color: #54935e;
+		}
+		.table-stopped {
+			background-color: #f6a24d;
+		}
+		.table-pending-stop {
+			background-color: rgb(164, 162, 29);
+		}
+		/* doesn't work for long logs?? */
+		pre {
+			white-space: pre-wrap;       /* Since CSS 2.1 */
+			white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+			white-space: -pre-wrap;      /* Opera 4-6 */
+			white-space: -o-pre-wrap;    /* Opera 7 */
+			word-wrap: break-word;       /* Internet Explorer 5.5+ */
+		}
+		@keyframes progress-animation {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+		table {
+			color: white;
+			border: 1px solid white;
+			border-collapse: collapse;
+		}
+		th, td {
+			padding: 5px;
+			border: 1px solid white;
+		}
+		button, input[type="submit"], input {
+			border-color: rgb(48, 52, 54);
+			background-color: #1d1e1e;
+			color: white;
+			border: 1px solid white;
+			cursor: pointer;
+		}
+		input[type=checkbox] {
+			word-break: keep-all;
+			display: none;
+		}
+		input[type=checkbox] + label:before {
+			cursor: pointer;
+			content: '[ ] ';
+		}
+		input[type=checkbox]:checked + label:before {
+			content: '[x] ';
+		}
+	</style>
+
+	<script>
+		// reset all elements inside the two panels
+		addEventListener('htmx:wsConnecting', function(event) {
+			document.querySelector('#left').innerHTML = '';
+			document.querySelector('#right').innerHTML = '';
+		});
+	</script>
+
+	<div id="left"></div>
+	<div class="splitter"></div>
+	<div id="right"></div>
+</body>
+</html>
