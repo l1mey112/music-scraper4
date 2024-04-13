@@ -15,8 +15,8 @@ function cred_db_get(): CredentialStore {
 		'deezer_arl': [],
 	}
 
-	const cred = db.select({ data: schema.thirdparty_store.data })
-		.from(schema.thirdparty_store)
+	const cred = db.select({ data: schema.kv_store.data })
+		.from(schema.kv_store)
 		.where(sql`kind = 'cred'`)
 		.get() as { data: CredentialStore } | undefined
 	
@@ -29,10 +29,10 @@ function cred_db_get(): CredentialStore {
 }
 
 function cred_db_set(store: CredentialStore) {
-	db.insert(schema.thirdparty_store)
+	db.insert(schema.kv_store)
 		.values({ kind: 'cred', data: store })
 		.onConflictDoUpdate({
-			target: schema.thirdparty_store.kind,
+			target: schema.kv_store.kind,
 			set: { data: store }
 		})
 		.run()

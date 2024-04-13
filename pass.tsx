@@ -1,10 +1,7 @@
 import { CredentialKind } from "./cred"
+import { passes } from "./passes"
 import { ProgressRef, component_invalidate, component_register, emit_log, route_register } from "./server"
 import { MaybePromise, PassIdentifier } from "./types"
-
-const passes: PassElement[] = [
-	
-]
 
 const TRIP_COUNT_MAX = 10
 
@@ -54,7 +51,7 @@ type PassBlock = {
 }
 
 type PassGroup = { blocks: PassElement[] }
-type PassElement = PassGroup | PassBlock
+export type PassElement = PassGroup | PassBlock
 
 enum PassStateEnum {
 	Running,
@@ -151,10 +148,14 @@ async function state_machine() {
 				pass_state.current_pass.mutations.clear()
 			}
 
-			const pass = pass_state.current_pass.blocks[pass_state.current_pass.idx]
-			if ('blocks' in pass) {
-				pass_state.current_pass = pass
-			}
+			// recursively enter the next pass
+			let pass
+			do {
+				pass = pass_state.current_pass.blocks[pass_state.current_pass.idx]
+				if ('blocks' in pass) {
+					pass_state.current_pass = pass
+				}
+			} while ('blocks' in pass)
 
 			if (pass_state.state == PassStateEnum.PendingStop) {
 				pass_state.state = PassStateEnum.Stopped
